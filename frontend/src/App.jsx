@@ -4,7 +4,6 @@ import { TenantProvider } from './contexts/TenantContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/shared/ErrorBoundary';
-import Layout from './components/layout/Layout';
 import { router } from './routes';
 
 function App() {
@@ -14,9 +13,7 @@ function App() {
         <NotificationProvider>
           <AuthProvider>
             <TenantProvider>
-              <Layout>
-                <RouterProvider router={router} />
-              </Layout>
+              <RouterProvider router={router} />
             </TenantProvider>
           </AuthProvider>
         </NotificationProvider>
