@@ -38,7 +38,7 @@ Write-Host ''
 npm run dev
 "@
     
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendScript
+    Start-Process powershell -ArgumentList @("-NoExit", "-Command", $backendScript)
     Write-Host "✅ Backend server starting in new window..." -ForegroundColor Green
 }
 
@@ -58,7 +58,7 @@ Write-Host ''
 npm run dev
 "@
     
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", $frontendScript
+    Start-Process powershell -ArgumentList @("-NoExit", "-Command", $frontendScript)
     Write-Host "✅ Frontend server starting in new window..." -ForegroundColor Green
 }
 
