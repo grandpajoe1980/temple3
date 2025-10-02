@@ -6,6 +6,11 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const tenantRoutes = require('./routes/tenant');
+const religiousTextsRoutes = require('./routes/religiousTexts');
+const calendarEventsRoutes = require('./routes/calendarEvents');
+const messagesRoutes = require('./routes/messages');
+const podcastsRoutes = require('./routes/podcasts');
+const videosRoutes = require('./routes/videos');
 
 const app = express();
 
@@ -37,6 +42,11 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tenant', tenantRoutes);
+app.use('/api/religious-texts', religiousTextsRoutes);
+app.use('/api/events', calendarEventsRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/podcasts', podcastsRoutes);
+app.use('/api/videos', videosRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -46,7 +56,12 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       auth: '/api/auth',
-      tenant: '/api/tenant'
+      tenant: '/api/tenant',
+      religiousTexts: '/api/religious-texts',
+      events: '/api/events',
+      messages: '/api/messages',
+      podcasts: '/api/podcasts',
+      videos: '/api/videos'
     }
   });
 });
