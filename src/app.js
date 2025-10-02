@@ -11,6 +11,9 @@ const calendarEventsRoutes = require('./routes/calendarEvents');
 const messagesRoutes = require('./routes/messages');
 const podcastsRoutes = require('./routes/podcasts');
 const videosRoutes = require('./routes/videos');
+const staffPostsRoutes = require('./routes/staffPosts');
+const laypersonPostsRoutes = require('./routes/laypersonPosts');
+const reminderBellsRoutes = require('./routes/reminderBells');
 
 const app = express();
 
@@ -47,6 +50,9 @@ app.use('/api/events', calendarEventsRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/podcasts', podcastsRoutes);
 app.use('/api/videos', videosRoutes);
+app.use('/api/staff-posts', staffPostsRoutes);
+app.use('/api/layperson-posts', laypersonPostsRoutes);
+app.use('/api/reminder-bells', reminderBellsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -61,7 +67,10 @@ app.get('/', (req, res) => {
       events: '/api/events',
       messages: '/api/messages',
       podcasts: '/api/podcasts',
-      videos: '/api/videos'
+      videos: '/api/videos',
+      staffPosts: '/api/staff-posts',
+      laypersonPosts: '/api/layperson-posts',
+      reminderBells: '/api/reminder-bells'
     }
   });
 });
