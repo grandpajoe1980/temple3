@@ -1,10 +1,11 @@
+import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { TenantProvider } from './contexts/TenantContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/shared/ErrorBoundary';
 import Layout from './components/layout/Layout';
-import LandingPage from './components/landing/LandingPage';
+import { router } from './routes';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <AuthProvider>
             <TenantProvider>
               <Layout>
-                <LandingPage />
+                <RouterProvider router={router} />
               </Layout>
             </TenantProvider>
           </AuthProvider>

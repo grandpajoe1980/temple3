@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import TempleSearch from './TempleSearch';
 import CreateTempleButton from './CreateTempleButton';
 import AuthModal from '../auth/AuthModal';
@@ -6,6 +8,14 @@ import Button from '../shared/Button';
 
 const LandingPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white py-12">

@@ -13,4 +13,5 @@ const usePermissions = () => {
   };
 };
 
+export { usePermissions };
 export default usePermissions;
