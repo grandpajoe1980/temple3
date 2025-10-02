@@ -1,6 +1,6 @@
 # Temple3
 
-This is the Temple3 project repository.
+App for the soul
 
 ## Getting Started
 
