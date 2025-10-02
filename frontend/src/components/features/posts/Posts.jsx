@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { 
   ChatBubbleLeftRightIcon,
-  PlusIcon,
-  HeartIcon,
-  ChatBubbleLeftIcon,
-  UserCircleIcon
+  PlusIcon
 } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
-import { formatDistanceToNow } from 'date-fns';
 import Button from '../../shared/Button';
 import CreatePostModal from './CreatePostModal';
 import PostCard from './PostCard';
@@ -77,7 +72,7 @@ export default function Posts() {
     }));
   };
 
-  const handleComment = (postId, comment) => {
+  const handleComment = (postId) => {
     setPosts(posts.map(post => {
       if (post.id === postId) {
         return {
