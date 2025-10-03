@@ -16,7 +16,7 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { tenantData } = useTenant();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(3); // TODO: fetch from API
+  const [notificationCount] = useState(3); // TODO: fetch from API
   const navigate = useNavigate();
   const location = useLocation();
 

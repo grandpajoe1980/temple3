@@ -57,7 +57,7 @@ const TempleSearch = () => {
       showSuccess(`Switched to ${temple.name}`);
       setSearchTerm('');
       setShowDropdown(false);
-    } catch (error) {
+    } catch {
       showError('Failed to switch temple');
     }
   };
