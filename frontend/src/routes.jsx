@@ -10,6 +10,7 @@ import ReligiousTexts from './components/features/texts/ReligiousTexts';
 import Messages from './components/features/messages/Messages';
 import Media from './components/features/media/Media';
 import Donations from './components/features/donations/Donations';
+import AdminControlPanel from './components/admin/AdminControlPanel';
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
@@ -101,6 +102,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Donations />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin',
+        element: (
+          <ProtectedRoute>
+            <AdminControlPanel />
           </ProtectedRoute>
         ),
       },
