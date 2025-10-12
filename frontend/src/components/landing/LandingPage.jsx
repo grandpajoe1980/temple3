@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTenant } from '../../contexts/TenantContext';
+import { useNotification } from '../../contexts/NotificationContext';
 import TempleSearch from './TempleSearch';
 import AuthModal from '../auth/AuthModal';
 import Button from '../shared/Button';
@@ -10,6 +11,7 @@ const LandingPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isAuthenticated } = useAuth();
   const { currentTenant } = useTenant();
+  const { showInfo } = useNotification();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,8 +22,7 @@ const LandingPage = () => {
 
   const handleContinueAsGuest = () => {
     if (!currentTenant) {
-      // Show error or guide user to select temple first
-      alert('Please select a temple from the search box before continuing as guest.');
+      showInfo('Please select a temple from the search box before continuing as guest.');
       return;
     }
     // Navigate to dashboard as guest (without authentication)
