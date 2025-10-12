@@ -13,6 +13,18 @@ async function seedDatabase() {
         contactEmail: 'admin@firstcommunity.org',
         phone: '+1-555-0100',
         address: '123 Main Street, Springfield, IL 62701',
+        city: 'Springfield',
+        stateProvince: 'IL',
+        country: 'United States',
+        postalCode: '62701',
+        religion: 'Christianity',
+        tradition: 'Protestant',
+        denomination: 'Non-denominational',
+        sect: 'Evangelical',
+        sizeCategory: 'medium',
+        averageWeeklyAttendance: 450,
+        languages: ['English'],
+        tags: ['family', 'community'],
         admin: {
           email: 'admin@firstcommunity.org',
           firstName: 'Admin',
@@ -27,6 +39,18 @@ async function seedDatabase() {
         contactEmail: 'hello@zengarden.org',
         phone: '+1-555-0200',
         address: '88 Lotus Way, Portland, OR 97205',
+        city: 'Portland',
+        stateProvince: 'OR',
+        country: 'United States',
+        postalCode: '97205',
+        religion: 'Buddhism',
+        tradition: 'Zen',
+        denomination: 'Soto Zen',
+        sect: 'Mahāyāna',
+        sizeCategory: 'small',
+        averageWeeklyAttendance: 120,
+        languages: ['English', 'Japanese'],
+        tags: ['meditation', 'retreat'],
         admin: {
           email: 'abbot@zengarden.org',
           firstName: 'Mei',
@@ -41,6 +65,18 @@ async function seedDatabase() {
         contactEmail: 'connect@sacredpath.com',
         phone: '+1-555-0300',
         address: '450 Sunrise Ridge, Boulder, CO 80302',
+        city: 'Boulder',
+        stateProvince: 'CO',
+        country: 'United States',
+        postalCode: '80302',
+        religion: 'Hinduism',
+        tradition: 'Bhakti',
+        denomination: 'Vaishnavism',
+        sect: 'Gaudiya',
+        sizeCategory: 'medium',
+        averageWeeklyAttendance: 260,
+        languages: ['English', 'Hindi'],
+        tags: ['kirtan', 'yoga'],
         admin: {
           email: 'guide@sacredpath.com',
           firstName: 'Jordan',
@@ -48,15 +84,84 @@ async function seedDatabase() {
           phone: '+1-555-0301',
           password: 'pathfinder'
         }
+      },
+      {
+        name: "St. Mary's Basilica",
+        subdomain: 'stmarys-phoenix',
+        contactEmail: 'info@stmarysbasilica.org',
+        phone: '+1-555-0400',
+        address: '231 N 3rd St, Phoenix, AZ 85004',
+        city: 'Phoenix',
+        stateProvince: 'AZ',
+        country: 'United States',
+        postalCode: '85004',
+        religion: 'Christianity',
+        tradition: 'Roman Catholic',
+        denomination: 'Catholic Church',
+        sect: 'Latin Rite',
+        sizeCategory: 'large',
+        averageWeeklyAttendance: 3200,
+        languages: ['English', 'Spanish'],
+        tags: ['cathedral', 'historic', 'downtown'],
+        admin: {
+          email: 'admin@stmarysbasilica.org',
+          firstName: 'Maria',
+          lastName: 'Lopez',
+          phone: '+1-555-0401',
+          password: 'basilica'
+        }
       }
     ];
 
     for (const tenant of sampleTenants) {
       const tenantResult = await pool.query(
-        `INSERT INTO tenants (name, subdomain, contact_email, phone, address)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO tenants (
+           name,
+           subdomain,
+           contact_email,
+           phone,
+           address,
+           city,
+           state_province,
+           country,
+           postal_code,
+           religion,
+           tradition,
+           denomination,
+           sect,
+           size_category,
+           average_weekly_attendance,
+           languages,
+           tags
+         )
+         VALUES (
+           $1, $2, $3, $4, $5,
+           $6, $7, $8, $9,
+           $10, $11, $12, $13,
+           $14, $15,
+           $16::text[],
+           $17::text[]
+         )
          RETURNING id`,
-        [tenant.name, tenant.subdomain, tenant.contactEmail, tenant.phone, tenant.address]
+        [
+          tenant.name,
+          tenant.subdomain,
+          tenant.contactEmail,
+          tenant.phone,
+          tenant.address,
+          tenant.city,
+          tenant.stateProvince,
+          tenant.country,
+          tenant.postalCode,
+          tenant.religion,
+          tenant.tradition,
+          tenant.denomination,
+          tenant.sect,
+          tenant.sizeCategory,
+          tenant.averageWeeklyAttendance,
+          tenant.languages || [],
+          tenant.tags || []
+        ]
       );
 
       const tenantId = tenantResult.rows[0].id;

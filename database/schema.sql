@@ -12,7 +12,22 @@ CREATE TABLE IF NOT EXISTS tenants (
     contact_email VARCHAR(255) NOT NULL,
     phone VARCHAR(50),
     address TEXT,
+    city VARCHAR(100),
+    state_province VARCHAR(100),
+    country VARCHAR(100),
+    postal_code VARCHAR(20),
     timezone VARCHAR(100) DEFAULT 'UTC',
+    religion VARCHAR(100),
+    tradition VARCHAR(100),
+    denomination VARCHAR(100),
+    sect VARCHAR(100),
+    size_category VARCHAR(50),
+    average_weekly_attendance INTEGER,
+    founded_year INTEGER,
+    languages TEXT[],
+    tags TEXT[],
+    latitude DECIMAL(9,6),
+    longitude DECIMAL(9,6),
     is_active BOOLEAN DEFAULT true,
     settings JSONB DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -197,6 +212,14 @@ CREATE INDEX IF NOT EXISTS idx_reminder_bells_tenant_id ON reminder_bells(tenant
 CREATE INDEX IF NOT EXISTS idx_staff_posts_tenant_id ON staff_posts(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_layperson_posts_tenant_id ON layperson_posts(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_comments_tenant_id ON comments(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_tenants_religion ON tenants((LOWER(religion)));
+CREATE INDEX IF NOT EXISTS idx_tenants_tradition ON tenants((LOWER(tradition)));
+CREATE INDEX IF NOT EXISTS idx_tenants_denomination ON tenants((LOWER(denomination)));
+CREATE INDEX IF NOT EXISTS idx_tenants_sect ON tenants((LOWER(sect)));
+CREATE INDEX IF NOT EXISTS idx_tenants_city ON tenants((LOWER(city)));
+CREATE INDEX IF NOT EXISTS idx_tenants_state_province ON tenants((LOWER(state_province)));
+CREATE INDEX IF NOT EXISTS idx_tenants_country ON tenants((LOWER(country)));
+CREATE INDEX IF NOT EXISTS idx_tenants_size_category ON tenants((LOWER(size_category)));
 
 -- Function to update the updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
