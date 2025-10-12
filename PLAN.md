@@ -548,14 +548,15 @@ const usePermissions = () => {
 - [x] Routing structure complete
 
 ### In Progress
-- [ ] Phase 4: Core Features (Calendar, Posts, Religious Texts, Messages)
+- [x] Phase 4: Core Features (Calendar, Posts, Religious Texts, Messages) — tenant-scoped experiences live with backend integration
+- [ ] Phase 4: Media & Donations feature work
 
 ### Next Actions
-1. Implement Calendar with event creation/viewing
-2. Build Posts feed with create/edit functionality
-3. Create Religious Texts library interface
-4. Implement Messaging system
-5. Test with real backend data
+1. Conduct QA across calendar, posts, texts, and messaging against seeded backend data and refine analytics hooks
+2. Begin media library implementation (podcasts, videos, uploads)
+3. Design and build donation flows (links + goal tracking)
+4. Layer moderation and notification rules onto new content streams
+5. Expand automated testing coverage for critical tenant workflows
 
 ## Notes and Decisions
 

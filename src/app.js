@@ -14,6 +14,7 @@ const videosRoutes = require('./routes/videos');
 const staffPostsRoutes = require('./routes/staffPosts');
 const laypersonPostsRoutes = require('./routes/laypersonPosts');
 const reminderBellsRoutes = require('./routes/reminderBells');
+const usersRoutes = require('./routes/users');
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api/videos', videosRoutes);
 app.use('/api/staff-posts', staffPostsRoutes);
 app.use('/api/layperson-posts', laypersonPostsRoutes);
 app.use('/api/reminder-bells', reminderBellsRoutes);
+app.use('/api/users', usersRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -70,7 +72,8 @@ app.get('/', (req, res) => {
       videos: '/api/videos',
       staffPosts: '/api/staff-posts',
       laypersonPosts: '/api/layperson-posts',
-      reminderBells: '/api/reminder-bells'
+      reminderBells: '/api/reminder-bells',
+      users: '/api/users'
     }
   });
 });

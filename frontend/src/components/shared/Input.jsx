@@ -9,7 +9,8 @@ const Input = ({
   required = false,
   disabled = false,
   className = '',
-  ...props 
+  helperText,
+  ...props
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
@@ -36,6 +37,9 @@ const Input = ({
         `}
         {...props}
       />
+      {helperText && !error && (
+        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
+      )}
       {error && (
         <p className="mt-1 text-sm text-red-600">{error}</p>
       )}

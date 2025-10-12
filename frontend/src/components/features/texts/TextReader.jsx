@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { 
+import {
   XMarkIcon,
   BookmarkIcon,
   MinusIcon,
-  PlusIcon
+  PlusIcon,
+  ArrowUturnLeftIcon
 } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkIconSolid } from '@heroicons/react/24/solid';
 import { format } from 'date-fns';
@@ -13,7 +14,7 @@ export default function TextReader({ text, onClose, onBookmark }) {
   const [fontSize, setFontSize] = useState(18);
 
   const increaseFontSize = () => {
-    if (fontSize < 24) setFontSize(fontSize + 2);
+    if (fontSize < 26) setFontSize(fontSize + 2);
   };
 
   const decreaseFontSize = () => {
@@ -21,94 +22,98 @@ export default function TextReader({ text, onClose, onBookmark }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Reader Header */}
-        <div className="bg-white rounded-t-lg shadow p-6 flex items-center justify-between border-b">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <XMarkIcon className="h-6 w-6" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{text.title}</h1>
-              <p className="text-sm text-gray-600">by {text.author}</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-100 py-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl border border-slate-100">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-slate-100">
+            <div className="flex items-start gap-4">
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                aria-label="Return to library"
+              >
+                <ArrowUturnLeftIcon className="h-5 w-5" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900">{text.title}</h1>
+                <p className="text-sm text-slate-500">by {text.author}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-slate-100 rounded-full px-3 py-1.5">
+                <button
+                  onClick={decreaseFontSize}
+                  className="p-1.5 hover:bg-white rounded-full"
+                  disabled={fontSize <= 14}
+                  aria-label="Decrease font size"
+                >
+                  <MinusIcon className="h-4 w-4" />
+                </button>
+                <span className="text-sm font-medium text-slate-600">{fontSize}px</span>
+                <button
+                  onClick={increaseFontSize}
+                  className="p-1.5 hover:bg-white rounded-full"
+                  disabled={fontSize >= 26}
+                  aria-label="Increase font size"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                </button>
+              </div>
+              <button
+                onClick={() => onBookmark(text.id)}
+                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                aria-label={text.bookmarked ? 'Remove bookmark' : 'Bookmark text'}
+              >
+                {text.bookmarked ? (
+                  <BookmarkIconSolid className="h-6 w-6 text-amber-500" />
+                ) : (
+                  <BookmarkIcon className="h-6 w-6 text-slate-500" />
+                )}
+              </button>
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                aria-label="Close reader"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Font Size Controls */}
-            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={decreaseFontSize}
-                className="p-2 hover:bg-white rounded transition-colors"
-                disabled={fontSize <= 14}
-              >
-                <MinusIcon className="h-4 w-4" />
-              </button>
-              <span className="text-sm font-medium px-2">{fontSize}px</span>
-              <button
-                onClick={increaseFontSize}
-                className="p-2 hover:bg-white rounded transition-colors"
-                disabled={fontSize >= 24}
-              >
-                <PlusIcon className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Bookmark Button */}
-            <button
-              onClick={() => onBookmark(text.id)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {text.bookmarked ? (
-                <BookmarkIconSolid className="h-6 w-6 text-yellow-500" />
-              ) : (
-                <BookmarkIcon className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Reader Content */}
-        <div className="bg-white rounded-b-lg shadow p-8">
-          <div className="max-w-3xl mx-auto">
-            {/* Metadata */}
-            <div className="flex items-center gap-4 mb-6 text-sm text-gray-600">
-              <span className={`px-3 py-1 rounded-full ${
-                text.category === 'Prayers' ? 'bg-blue-100 text-blue-800' :
-                text.category === 'Teachings' ? 'bg-green-100 text-green-800' :
-                text.category === 'Scriptures' ? 'bg-purple-100 text-purple-800' :
-                'bg-gray-100 text-gray-800'
-              }`}>
+          <div className="p-8 space-y-8">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200 text-xs font-semibold">
                 {text.category}
               </span>
-              <span>
-                {format(new Date(text.date), 'MMMM d, yyyy')}
-              </span>
+              <span>{format(new Date(text.createdAt), 'MMMM d, yyyy')}</span>
+              {text.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {text.tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Text Content */}
-            <div 
-              className="prose prose-lg max-w-none leading-relaxed text-gray-800"
-              style={{ fontSize: `${fontSize}px`, lineHeight: '1.8' }}
+            <article
+              className="prose prose-lg max-w-none text-slate-800 leading-relaxed"
+              style={{ fontSize: `${fontSize}px`, lineHeight: 1.8 }}
             >
-              {text.content.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="mb-6">
-                  {paragraph}
+              {text.content.split('\n').map((paragraph, index) => (
+                <p key={`paragraph-${index}`} className="mb-6">
+                  {paragraph.trim()}
                 </p>
               ))}
-            </div>
+            </article>
 
-            {/* Reader Actions */}
-            <div className="mt-12 pt-8 border-t flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200">
               <Button variant="primary" className="flex-1">
-                Share
+                Share via Email
               </Button>
               <Button variant="outline" className="flex-1">
-                Print
+                Print PDF
               </Button>
             </div>
           </div>
