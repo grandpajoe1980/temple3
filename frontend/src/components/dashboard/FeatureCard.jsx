@@ -8,16 +8,16 @@ export default function FeatureCard({ feature }) {
   // Check if user has permission to view this feature
   const hasAccess = hasPermission(feature.permission);
 
-  const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600 hover:bg-blue-200',
-    green: 'bg-green-100 text-green-600 hover:bg-green-200',
-    purple: 'bg-purple-100 text-purple-600 hover:bg-purple-200',
-    indigo: 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200',
-    pink: 'bg-pink-100 text-pink-600 hover:bg-pink-200',
-    red: 'bg-red-100 text-red-600 hover:bg-red-200',
-    amber: 'bg-amber-100 text-amber-600 hover:bg-amber-200',
-    cyan: 'bg-cyan-100 text-cyan-600 hover:bg-cyan-200',
-    gray: 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+  const gradientMap = {
+    blue: 'from-indigo-500 via-purple-500 to-blue-500',
+    green: 'from-emerald-400 via-teal-400 to-cyan-400',
+    purple: 'from-violet-500 via-fuchsia-500 to-indigo-500',
+    indigo: 'from-blue-500 via-indigo-500 to-purple-500',
+    pink: 'from-rose-400 via-pink-500 to-fuchsia-500',
+    red: 'from-red-400 via-rose-500 to-orange-500',
+    amber: 'from-amber-400 via-orange-400 to-rose-400',
+    cyan: 'from-sky-400 via-cyan-400 to-indigo-400',
+    gray: 'from-slate-500 via-slate-400 to-slate-300',
   };
 
   const handleClick = () => {
@@ -31,18 +31,31 @@ export default function FeatureCard({ feature }) {
   }
 
   const Icon = feature.icon;
-  const colorClass = colorClasses[feature.color] || colorClasses.blue;
+  const gradient = gradientMap[feature.color] || gradientMap.blue;
 
   return (
     <button
       onClick={handleClick}
-      className={`${colorClass} rounded-lg p-6 text-left transition-all transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+      className="group relative h-full overflow-hidden rounded-3xl border border-white/60 bg-white/70 p-6 text-left shadow-xl shadow-indigo-100/70 backdrop-blur transition-transform duration-300 hover:-translate-y-1 focus:outline-none"
     >
-      <div className="flex items-center justify-between mb-4">
-        <Icon className="h-8 w-8" />
+      <div className={`absolute inset-0 opacity-0 group-hover:opacity-90 transition-opacity duration-300 bg-gradient-to-br ${gradient}`} />
+      <div className="relative flex flex-col h-full">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-white/70 to-white/30 shadow-inner shadow-indigo-200/60">
+            <Icon className="h-6 w-6 text-indigo-500 transition-colors group-hover:text-white" />
+          </div>
+          <span className="rounded-full border border-indigo-100/70 bg-white/70 px-3 py-1 text-xs font-medium text-indigo-500 shadow-sm shadow-indigo-100/60">
+            Explore
+          </span>
+        </div>
+        <h3 className="relative text-lg font-semibold text-slate-900 group-hover:text-white transition-colors">{feature.name}</h3>
+        <p className="relative mt-2 text-sm text-slate-500 group-hover:text-white/80 transition-colors">
+          {feature.description}
+        </p>
+        <div className="relative mt-auto pt-6 text-sm font-medium text-indigo-500 group-hover:text-white">
+          Enter space →
+        </div>
       </div>
-      <h3 className="text-lg font-semibold mb-2">{feature.name}</h3>
-      <p className="text-sm opacity-80">{feature.description}</p>
     </button>
   );
 }

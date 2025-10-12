@@ -58,13 +58,19 @@ export default function RecentActivity() {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+    <div className="overflow-hidden rounded-3xl border border-white/60 bg-white/70 shadow-2xl shadow-indigo-100/60 backdrop-blur">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-white/60 bg-white/80">
+        <div>
+          <h3 className="text-lg font-semibold text-slate-900">Recent activity</h3>
+          <p className="text-xs uppercase tracking-widest text-slate-400">Community pulse</p>
+        </div>
+        <span className="rounded-full border border-indigo-100/70 bg-indigo-50/80 px-3 py-1 text-xs font-medium text-indigo-600">
+          Live feed
+        </span>
       </div>
-      <div className="divide-y divide-gray-200">
+      <div className="divide-y divide-white/50">
         {activities.length === 0 ? (
-          <div className="px-6 py-8 text-center text-gray-500">
+          <div className="px-6 py-10 text-center text-slate-500">
             No recent activity to display
           </div>
         ) : (
@@ -73,22 +79,25 @@ export default function RecentActivity() {
             return (
               <div
                 key={activity.id}
-                className="px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="group relative px-6 py-5 transition-colors hover:bg-white/80"
               >
-                <div className="flex items-start">
-                  <div className={`${activity.bgColor} rounded-lg p-2 mr-4 flex-shrink-0`}>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-white/70 to-white/30 shadow-inner shadow-indigo-200/60">
                     <Icon className={`h-5 w-5 ${activity.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-semibold text-slate-900">
                       {activity.title}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="mt-1 text-sm text-slate-500">
                       {activity.description}
                     </p>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="mt-2 text-xs text-slate-400">
                       {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                     </p>
+                  </div>
+                  <div className="self-center text-xs font-medium text-indigo-500 opacity-0 transition-opacity group-hover:opacity-100">
+                    View →
                   </div>
                 </div>
               </div>
@@ -97,9 +106,9 @@ export default function RecentActivity() {
         )}
       </div>
       {activities.length > 0 && (
-        <div className="px-6 py-4 border-t border-gray-200 text-center">
-          <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
-            View All Activity
+        <div className="px-6 py-5 border-t border-white/60 text-center">
+          <button className="text-sm font-medium text-indigo-500 transition-colors hover:text-indigo-600">
+            View all activity
           </button>
         </div>
       )}
