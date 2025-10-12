@@ -34,6 +34,31 @@ CREATE TABLE IF NOT EXISTS tenants (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Maintain compatibility with older databases that may lack the new tenant profiling fields
+ALTER TABLE tenants
+    ADD COLUMN IF NOT EXISTS domain VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS contact_email VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS phone VARCHAR(50),
+    ADD COLUMN IF NOT EXISTS address TEXT,
+    ADD COLUMN IF NOT EXISTS city VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS state_province VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS country VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS postal_code VARCHAR(20),
+    ADD COLUMN IF NOT EXISTS timezone VARCHAR(100) DEFAULT 'UTC',
+    ADD COLUMN IF NOT EXISTS religion VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS tradition VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS denomination VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS sect VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS size_category VARCHAR(50),
+    ADD COLUMN IF NOT EXISTS average_weekly_attendance INTEGER,
+    ADD COLUMN IF NOT EXISTS founded_year INTEGER,
+    ADD COLUMN IF NOT EXISTS languages TEXT[],
+    ADD COLUMN IF NOT EXISTS tags TEXT[],
+    ADD COLUMN IF NOT EXISTS latitude DECIMAL(9,6),
+    ADD COLUMN IF NOT EXISTS longitude DECIMAL(9,6),
+    ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true,
+    ADD COLUMN IF NOT EXISTS settings JSONB DEFAULT '{}';
+
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -231,6 +256,17 @@ END;
 $$ language 'plpgsql';
 
 -- Create triggers for updated_at columns
+DROP TRIGGER IF EXISTS update_tenants_updated_at ON tenants;
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+DROP TRIGGER IF EXISTS update_roles_updated_at ON roles;
+DROP TRIGGER IF EXISTS update_religious_texts_updated_at ON religious_texts;
+DROP TRIGGER IF EXISTS update_calendar_events_updated_at ON calendar_events;
+DROP TRIGGER IF EXISTS update_podcasts_updated_at ON podcasts;
+DROP TRIGGER IF EXISTS update_videos_updated_at ON videos;
+DROP TRIGGER IF EXISTS update_reminder_bells_updated_at ON reminder_bells;
+DROP TRIGGER IF EXISTS update_staff_posts_updated_at ON staff_posts;
+DROP TRIGGER IF EXISTS update_layperson_posts_updated_at ON layperson_posts;
+
 CREATE TRIGGER update_tenants_updated_at BEFORE UPDATE ON tenants FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_roles_updated_at BEFORE UPDATE ON roles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
