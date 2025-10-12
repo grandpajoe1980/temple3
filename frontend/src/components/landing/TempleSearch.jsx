@@ -74,7 +74,7 @@ const TempleSearch = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
           placeholder="Search for your temple..."
-          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+          className="block w-full rounded-full border border-transparent bg-white px-10 py-4 text-lg leading-5 shadow-[0_10px_40px_-30px_rgba(15,23,42,0.6)] placeholder-gray-400 focus:border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-100"
         />
         {loading && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -84,19 +84,19 @@ const TempleSearch = () => {
       </div>
 
       {showDropdown && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-auto">
+        <div className="absolute z-10 mt-3 w-full overflow-auto rounded-2xl border border-slate-100 bg-white/95 shadow-2xl shadow-slate-200/70 backdrop-blur max-h-96">
           {suggestions.map((temple) => (
             <button
               key={temple.id}
               onClick={() => handleSelectTemple(temple)}
-              className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b border-gray-100 last:border-b-0"
+              className="w-full px-5 py-3 text-left transition hover:bg-indigo-50/70 focus:bg-indigo-50/70 focus:outline-none border-b border-slate-100 last:border-b-0"
             >
               <div className="font-medium text-gray-900">{temple.name}</div>
               {temple.subdomain && (
-                <div className="text-sm text-gray-500">@{temple.subdomain}</div>
+                <div className="text-sm text-slate-500">@{temple.subdomain}</div>
               )}
               {temple.address && (
-                <div className="text-xs text-gray-400 mt-1">{temple.address}</div>
+                <div className="mt-1 text-xs text-slate-400">{temple.address}</div>
               )}
             </button>
           ))}
@@ -104,9 +104,9 @@ const TempleSearch = () => {
       )}
 
       {showDropdown && searchTerm.length >= 2 && suggestions.length === 0 && !loading && (
-        <div className="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 p-4 text-center">
-          <p className="text-gray-600">No temples found matching "{searchTerm}"</p>
-          <p className="text-sm text-gray-500 mt-2">Try a different search term or create a new temple</p>
+        <div className="absolute z-10 mt-3 w-full rounded-2xl border border-slate-100 bg-white/95 p-5 text-center shadow-2xl shadow-slate-200/70 backdrop-blur">
+          <p className="text-sm font-medium text-slate-700">No temples found matching "{searchTerm}"</p>
+          <p className="mt-2 text-sm text-slate-500">Try a different search term or create a new temple</p>
         </div>
       )}
     </div>

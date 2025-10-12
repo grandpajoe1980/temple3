@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/layout/Layout';
 import LandingPage from './components/landing/LandingPage';
+import GuestPreview from './components/landing/GuestPreview';
 import Dashboard from './components/dashboard/Dashboard';
 import Calendar from './components/features/calendar/Calendar';
 import Posts from './components/features/posts/Posts';
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />,
+      },
+      {
+        path: '/experience',
+        element: <GuestPreview />,
       },
       {
         path: '/dashboard',
