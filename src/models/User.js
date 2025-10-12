@@ -3,24 +3,25 @@ const { hashPassword } = require('../utils/auth');
 
 class User {
   static async create({ tenantId, email, password, firstName, lastName, phone }) {
+    const normalizedEmail = email.trim().toLowerCase();
     const passwordHash = await hashPassword(password);
-    
+
     const result = await pool.query(
       `INSERT INTO users (tenant_id, email, password_hash, first_name, last_name, phone)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, tenant_id, email, first_name, last_name, phone, is_active, is_verified, created_at`,
-      [tenantId, email, passwordHash, firstName, lastName, phone]
+      [tenantId, normalizedEmail, passwordHash, firstName, lastName, phone]
     );
-    
+
     return result.rows[0];
   }
 
   static async findByEmail(tenantId, email) {
     const result = await pool.query(
-      'SELECT * FROM users WHERE tenant_id = $1 AND email = $2',
+      'SELECT * FROM users WHERE tenant_id = $1 AND LOWER(email) = LOWER($2)',
       [tenantId, email]
     );
-    
+
     return result.rows[0];
   }
 

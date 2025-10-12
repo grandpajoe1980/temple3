@@ -22,18 +22,25 @@ export const TenantProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await tenantService.getBySubdomain(subdomain);
-      setTenantData(data);
+      setTenantData(data.tenant);
     } catch (error) {
       console.error('Failed to load tenant data:', error);
+      setTenantData(null);
     } finally {
       setLoading(false);
     }
   };
 
   const switchTenant = async (subdomain) => {
-    tenantService.setCurrentTenant(subdomain);
-    setCurrentTenant(subdomain);
-    await loadTenantData(subdomain);
+    const normalizedSubdomain = subdomain?.trim().toLowerCase();
+
+    if (!normalizedSubdomain) {
+      throw new Error('A valid subdomain is required to switch tenants.');
+    }
+
+    tenantService.setCurrentTenant(normalizedSubdomain);
+    setCurrentTenant(normalizedSubdomain);
+    await loadTenantData(normalizedSubdomain);
   };
 
   const clearTenant = () => {

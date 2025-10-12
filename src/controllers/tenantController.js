@@ -1,6 +1,73 @@
 const Tenant = require('../models/Tenant');
 
 class TenantController {
+  static async searchTenants(req, res) {
+    try {
+      const {
+        search = '',
+        limit = 20,
+        offset = 0,
+        includeInactive = 'false'
+      } = req.query;
+
+      const numericLimit = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+      const numericOffset = Math.max(parseInt(offset, 10) || 0, 0);
+      const includeInactiveTenants = includeInactive === 'true';
+
+      const results = await Tenant.searchPublic({
+        searchTerm: typeof search === 'string' ? search.trim() : '',
+        limit: numericLimit,
+        offset: numericOffset,
+        includeInactive: includeInactiveTenants
+      });
+
+      res.json({
+        tenants: results.tenants,
+        pagination: {
+          total: results.total,
+          limit: numericLimit,
+          offset: numericOffset
+        }
+      });
+    } catch (error) {
+      console.error('Tenant search error:', error);
+      res.status(500).json({ error: 'Failed to search tenants' });
+    }
+  }
+
+  static async getTenantBySubdomain(req, res) {
+    try {
+      const { subdomain } = req.params;
+
+      if (!subdomain) {
+        return res.status(400).json({ error: 'Subdomain is required' });
+      }
+
+      const tenant = await Tenant.findBySubdomain(subdomain.trim(), { includeInactive: false });
+
+      if (!tenant) {
+        return res.status(404).json({ error: 'Tenant not found' });
+      }
+
+      res.json({
+        tenant: {
+          id: tenant.id,
+          name: tenant.name,
+          subdomain: tenant.subdomain,
+          domain: tenant.domain,
+          contactEmail: tenant.contact_email,
+          phone: tenant.phone,
+          address: tenant.address,
+          timezone: tenant.timezone,
+          settings: tenant.settings
+        }
+      });
+    } catch (error) {
+      console.error('Get tenant by subdomain error:', error);
+      res.status(500).json({ error: 'Failed to load tenant information' });
+    }
+  }
+
   static async create(req, res) {
     try {
       const { name, subdomain, domain, contactEmail, phone, address } = req.body;
@@ -11,26 +78,28 @@ class TenantController {
 
       // Validate subdomain format
       const subdomainRegex = /^[a-z0-9-]+$/;
-      if (!subdomainRegex.test(subdomain)) {
-        return res.status(400).json({ 
-          error: 'Invalid subdomain format. Use only lowercase letters, numbers, and hyphens.' 
+      const normalizedSubdomain = subdomain.trim().toLowerCase();
+
+      if (!subdomainRegex.test(normalizedSubdomain)) {
+        return res.status(400).json({
+          error: 'Invalid subdomain format. Use only lowercase letters, numbers, and hyphens.'
         });
       }
 
       // Check if subdomain already exists
-      const existingTenant = await Tenant.findBySubdomain(subdomain);
+      const existingTenant = await Tenant.findBySubdomain(normalizedSubdomain, { includeInactive: true });
       if (existingTenant) {
         return res.status(409).json({ error: 'Subdomain already taken' });
       }
 
       // Create tenant
       const tenant = await Tenant.create({
-        name,
-        subdomain,
-        domain,
-        contactEmail,
-        phone,
-        address
+        name: name.trim(),
+        subdomain: normalizedSubdomain,
+        domain: domain?.trim().toLowerCase() || null,
+        contactEmail: contactEmail.trim().toLowerCase(),
+        phone: phone?.trim(),
+        address: address?.trim()
       });
 
       res.status(201).json({
@@ -48,7 +117,7 @@ class TenantController {
     }
   }
 
-  static async getTenant(req, res) {
+  static async getCurrentTenant(req, res) {
     try {
       if (!req.tenant) {
         return res.status(400).json({ error: 'Tenant context required' });
@@ -79,11 +148,34 @@ class TenantController {
       }
 
       const allowedUpdates = ['name', 'domain', 'contact_email', 'phone', 'address', 'timezone', 'settings'];
+      const normalizedBody = { ...req.body };
+
+      if (typeof normalizedBody.contactEmail === 'string') {
+        normalizedBody.contact_email = normalizedBody.contactEmail.trim().toLowerCase();
+        delete normalizedBody.contactEmail;
+      }
+
+      if (typeof normalizedBody.name === 'string') {
+        normalizedBody.name = normalizedBody.name.trim();
+      }
+
+      if (typeof normalizedBody.domain === 'string') {
+        normalizedBody.domain = normalizedBody.domain.trim().toLowerCase();
+      }
+
+      if (typeof normalizedBody.phone === 'string') {
+        normalizedBody.phone = normalizedBody.phone.trim();
+      }
+
+      if (typeof normalizedBody.address === 'string') {
+        normalizedBody.address = normalizedBody.address.trim();
+      }
+
       const updates = {};
 
-      Object.keys(req.body).forEach(key => {
+      Object.keys(normalizedBody).forEach(key => {
         if (allowedUpdates.includes(key)) {
-          updates[key] = req.body[key];
+          updates[key] = normalizedBody[key];
         }
       });
 

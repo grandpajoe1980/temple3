@@ -72,7 +72,61 @@ Create a new tenant (church/temple).
 
 ---
 
-#### GET /api/tenant
+#### GET /api/tenant/discover
+Search for active tenants. Public endpoint that supports the landing page search experience.
+
+**Query Parameters:**
+- `search` (optional): partial match on tenant name, subdomain, domain, or address
+- `limit` (optional, default 20): number of results to return (max 100)
+- `offset` (optional, default 0): offset for pagination
+
+**Response:** `200 OK`
+```json
+{
+  "tenants": [
+    {
+      "id": "uuid",
+      "name": "First Baptist Church",
+      "subdomain": "first-baptist",
+      "domain": "firstbaptist.org",
+      "contactEmail": "admin@firstbaptist.org",
+      "address": "123 Main St",
+      "timezone": "UTC"
+    }
+  ],
+  "pagination": {
+    "total": 3,
+    "limit": 20,
+    "offset": 0
+  }
+}
+```
+
+---
+
+#### GET /api/tenant/lookup/:subdomain
+Retrieve public tenant information by subdomain. Useful for selecting a tenant before authentication.
+
+**Response:** `200 OK`
+```json
+{
+  "tenant": {
+    "id": "uuid",
+    "name": "First Baptist Church",
+    "subdomain": "first-baptist",
+    "domain": "firstbaptist.org",
+    "contactEmail": "admin@firstbaptist.org",
+    "phone": "+1-555-0100",
+    "address": "123 Main St",
+    "timezone": "UTC",
+    "settings": {}
+  }
+}
+```
+
+---
+
+#### GET /api/tenant/current
 Get current tenant information (requires authentication and tenant context).
 
 **Headers:**
@@ -99,7 +153,7 @@ Authorization: Bearer <token>
 
 ---
 
-#### PUT /api/tenant
+#### PUT /api/tenant/current
 Update tenant information (requires authentication and tenant context).
 
 **Headers:**

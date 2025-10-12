@@ -3,7 +3,12 @@ import api from './api';
 export const authService = {
   // Login with email and password
   async login(email, password) {
-    const response = await api.post('/auth/login', { email, password });
+    const payload = {
+      email: email?.trim().toLowerCase(),
+      password
+    };
+
+    const response = await api.post('/auth/login', payload);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -13,7 +18,18 @@ export const authService = {
 
   // Register new user
   async register(userData) {
-    const response = await api.post('/auth/register', userData);
+    const payload = {
+      email: userData.email?.trim().toLowerCase(),
+      password: userData.password,
+      firstName: userData.firstName?.trim(),
+      lastName: userData.lastName?.trim()
+    };
+
+    if (userData.phone) {
+      payload.phone = userData.phone.trim();
+    }
+
+    const response = await api.post('/auth/register', payload);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -25,7 +41,6 @@ export const authService = {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('currentTenant');
   },
 
   // Get current user from localStorage

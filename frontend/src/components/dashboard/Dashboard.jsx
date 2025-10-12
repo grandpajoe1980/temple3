@@ -16,7 +16,7 @@ import {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { currentTenant } = useTenant();
+  const { currentTenant, tenantData } = useTenant();
 
   // Define available features based on user permissions
   const features = [
@@ -108,7 +108,7 @@ export default function Dashboard() {
               Welcome back, {user?.firstName || user?.email}!
             </h1>
             <p className="text-xl text-blue-100">
-              {currentTenant?.name || 'Your Temple Community'}
+              {tenantData?.name || currentTenant || 'Your Temple Community'}
             </p>
           </div>
         </div>
