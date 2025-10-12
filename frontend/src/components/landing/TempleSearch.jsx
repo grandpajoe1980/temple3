@@ -37,7 +37,7 @@ const TempleSearch = () => {
       setLoading(true);
       try {
         const results = await tenantService.list({ search: searchTerm, limit: 5 });
-        setSuggestions(Array.isArray(results) ? results : []);
+        setSuggestions(Array.isArray(results?.tenants) ? results.tenants : []);
         setShowDropdown(true);
       } catch (error) {
         console.error('Search failed:', error);

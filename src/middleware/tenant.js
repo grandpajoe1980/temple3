@@ -3,8 +3,8 @@ const pool = require('../config/database');
 const tenantMiddleware = async (req, res, next) => {
   try {
     // Extract tenant identifier from subdomain, domain, or header
-    const tenantIdentifier = 
-      req.headers['x-tenant-id'] || 
+    const tenantIdentifier =
+      req.headers['x-tenant-id'] ||
       req.headers['x-tenant-subdomain'] ||
       req.query.tenant;
 
@@ -13,10 +13,23 @@ const tenantMiddleware = async (req, res, next) => {
       return next();
     }
 
+    const identifier =
+      typeof tenantIdentifier === 'string' ? tenantIdentifier.trim() : tenantIdentifier;
+
+    if (!identifier) {
+      return res.status(400).json({ error: 'Tenant identifier is required' });
+    }
+
+    const normalizedIdentifier =
+      typeof identifier === 'string' ? identifier.toLowerCase() : identifier;
+
     // Lookup tenant
     const result = await pool.query(
-      'SELECT * FROM tenants WHERE id = $1 OR subdomain = $2 OR domain = $3',
-      [tenantIdentifier, tenantIdentifier, tenantIdentifier]
+      `SELECT * FROM tenants
+       WHERE id::text = $1
+         OR LOWER(subdomain) = $2
+         OR LOWER(COALESCE(domain, '')) = $3`,
+      [identifier, normalizedIdentifier, normalizedIdentifier]
     );
 
     if (result.rows.length === 0) {

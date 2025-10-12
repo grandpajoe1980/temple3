@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTenant } from '../../contexts/TenantContext';
 import { useNotification } from '../../contexts/NotificationContext';
 import Input from '../shared/Input';
 import Button from '../shared/Button';
@@ -12,6 +13,7 @@ const LoginForm = ({ onSwitchToSignup, onClose }) => {
   const [errors, setErrors] = useState({});
 
   const { login } = useAuth();
+  const { currentTenant, tenantData } = useTenant();
   const { showSuccess, showError } = useNotification();
 
   const validateForm = () => {
@@ -56,6 +58,26 @@ const LoginForm = ({ onSwitchToSignup, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {!currentTenant && (
+        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-700">
+            Select your temple from the search above before signing in.
+          </p>
+        </div>
+      )}
+
+      {currentTenant && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-700">
+            You are signing in to{' '}
+            <span className="font-semibold">
+              {tenantData?.name || `@${currentTenant}`}
+            </span>
+            .
+          </p>
+        </div>
+      )}
+
       {errors.form && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-600">{errors.form}</p>
@@ -100,7 +122,7 @@ const LoginForm = ({ onSwitchToSignup, onClose }) => {
         type="submit"
         variant="primary"
         className="w-full"
-        disabled={loading}
+        disabled={loading || !currentTenant}
       >
         {loading ? <LoadingSpinner size="sm" /> : 'Sign In'}
       </Button>

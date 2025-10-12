@@ -3,13 +3,22 @@ import api from './api';
 export const tenantService = {
   // Get list of tenants (for search)
   async list(params = {}) {
-    const response = await api.get('/tenant', { params });
+    const queryParams = { ...params };
+    if (typeof queryParams.search === 'string') {
+      queryParams.search = queryParams.search.trim();
+    }
+
+    const response = await api.get('/tenant/discover', { params: queryParams });
     return response.data;
   },
 
   // Get tenant by subdomain
   async getBySubdomain(subdomain) {
-    const response = await api.get(`/tenant/${subdomain}`);
+    if (!subdomain) {
+      throw new Error('Subdomain is required');
+    }
+
+    const response = await api.get(`/tenant/lookup/${encodeURIComponent(subdomain)}`);
     return response.data;
   },
 
@@ -20,14 +29,19 @@ export const tenantService = {
   },
 
   // Update tenant
-  async update(id, tenantData) {
-    const response = await api.put(`/tenant/${id}`, tenantData);
+  async update(tenantData) {
+    const response = await api.put('/tenant/current', tenantData);
     return response.data;
   },
 
   // Set current tenant in localStorage
   setCurrentTenant(subdomain) {
-    localStorage.setItem('currentTenant', subdomain);
+    if (!subdomain) {
+      localStorage.removeItem('currentTenant');
+      return;
+    }
+
+    localStorage.setItem('currentTenant', subdomain.trim().toLowerCase());
   },
 
   // Get current tenant from localStorage

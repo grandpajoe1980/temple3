@@ -5,17 +5,24 @@ class AuthController {
   static async register(req, res) {
     try {
       const { email, password, firstName, lastName, phone } = req.body;
-      
+
       if (!req.tenant) {
-        return res.status(400).json({ error: 'Tenant context required' });
+        return res.status(400).json({
+          error: 'Tenant context required. Please include the X-Tenant-Subdomain header.'
+        });
       }
 
-      if (!email || !password || !firstName || !lastName) {
+      const normalizedEmail = email?.trim().toLowerCase();
+      const normalizedFirstName = firstName?.trim();
+      const normalizedLastName = lastName?.trim();
+      const normalizedPhone = phone?.trim();
+
+      if (!normalizedEmail || !password || !normalizedFirstName || !normalizedLastName) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
       // Check if user already exists
-      const existingUser = await User.findByEmail(req.tenant.id, email);
+      const existingUser = await User.findByEmail(req.tenant.id, normalizedEmail);
       if (existingUser) {
         return res.status(409).json({ error: 'User already exists' });
       }
@@ -23,11 +30,11 @@ class AuthController {
       // Create user
       const user = await User.create({
         tenantId: req.tenant.id,
-        email,
+        email: normalizedEmail,
         password,
-        firstName,
-        lastName,
-        phone
+        firstName: normalizedFirstName,
+        lastName: normalizedLastName,
+        phone: normalizedPhone
       });
 
       // Generate token
@@ -58,17 +65,21 @@ class AuthController {
       const { email, password } = req.body;
 
       if (!req.tenant) {
-        return res.status(400).json({ error: 'Tenant context required' });
+        return res.status(400).json({
+          error: 'Tenant context required. Please select your temple before signing in.'
+        });
       }
 
-      if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password required' });
+      const normalizedEmail = email?.trim().toLowerCase();
+
+      if (!normalizedEmail || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
       }
 
       // Find user
-      const user = await User.findByEmail(req.tenant.id, email);
+      const user = await User.findByEmail(req.tenant.id, normalizedEmail);
       if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Invalid email or password' });
       }
 
       if (!user.is_active) {
