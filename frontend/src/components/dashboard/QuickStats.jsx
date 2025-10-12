@@ -32,29 +32,25 @@ export default function QuickStats() {
       name: 'Upcoming Events',
       value: stats.upcomingEvents,
       icon: CalendarDaysIcon,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      accent: 'from-indigo-500 via-purple-500 to-blue-500',
     },
     {
       name: 'Unread Messages',
       value: stats.unreadMessages,
       icon: ChatBubbleLeftIcon,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      accent: 'from-emerald-400 via-teal-400 to-sky-400',
     },
     {
       name: 'Community Members',
       value: stats.communityMembers,
       icon: UserGroupIcon,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      accent: 'from-violet-500 via-indigo-500 to-purple-500',
     },
     {
       name: 'Active Reminders',
       value: stats.activeReminders,
       icon: BellAlertIcon,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-100',
+      accent: 'from-amber-400 via-orange-400 to-rose-400',
     },
   ];
 
@@ -65,16 +61,20 @@ export default function QuickStats() {
         return (
           <div
             key={item.name}
-            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
+            className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/70 p-6 shadow-xl shadow-indigo-100/70 backdrop-blur transition-transform duration-300 hover:-translate-y-1"
           >
-            <div className="flex items-center">
-              <div className={`${item.bgColor} rounded-lg p-3 mr-4`}>
-                <Icon className={`h-6 w-6 ${item.color}`} />
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity duration-300 bg-gradient-to-br ${item.accent}`} />
+            <div className="relative flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-white/70 to-white/30 shadow-inner shadow-indigo-200/60">
+                <Icon className="h-6 w-6 text-indigo-500 transition-colors group-hover:text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{item.name}</p>
-                <p className="text-2xl font-bold text-gray-900">{item.value}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors group-hover:text-white/80">{item.name}</p>
+                <p className="text-3xl font-semibold text-slate-900 transition-colors group-hover:text-white">{item.value}</p>
               </div>
+            </div>
+            <div className="relative mt-4 text-xs text-slate-500 transition-colors group-hover:text-white/80">
+              Harmonize your day with timely insights.
             </div>
           </div>
         );
