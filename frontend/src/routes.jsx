@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
+import { useTenant } from './contexts/TenantContext';
 import Layout from './components/layout/Layout';
 import LandingPage from './components/landing/LandingPage';
 import Dashboard from './components/dashboard/Dashboard';
@@ -12,9 +13,10 @@ import Media from './components/features/media/Media';
 import Donations from './components/features/donations/Donations';
 import AdminControlPanel from './components/admin/AdminControlPanel';
 
-// Protected Route wrapper
-function ProtectedRoute({ children }) {
+// Protected Route wrapper - allows guest access if tenant is selected
+function ProtectedRoute({ children, requireAuth = false }) {
   const { isAuthenticated, loading } = useAuth();
+  const { currentTenant } = useTenant();
   
   if (loading) {
     return (
@@ -24,7 +26,13 @@ function ProtectedRoute({ children }) {
     );
   }
   
-  if (!isAuthenticated) {
+  // If authentication is required (e.g., admin pages), check for auth
+  if (requireAuth && !isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  
+  // For guest mode, allow access if tenant is selected
+  if (!isAuthenticated && !currentTenant) {
     return <Navigate to="/" replace />;
   }
   
@@ -84,7 +92,7 @@ export const router = createBrowserRouter([
       {
         path: '/messages',
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requireAuth={true}>
             <Messages />
           </ProtectedRoute>
         ),
@@ -100,7 +108,7 @@ export const router = createBrowserRouter([
       {
         path: '/donations',
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requireAuth={true}>
             <Donations />
           </ProtectedRoute>
         ),
@@ -108,7 +116,7 @@ export const router = createBrowserRouter([
       {
         path: '/admin',
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requireAuth={true}>
             <AdminControlPanel />
           </ProtectedRoute>
         ),
