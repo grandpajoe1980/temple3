@@ -74,7 +74,7 @@ const TempleSearch = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
           placeholder="Search for your temple..."
-          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+          className="block w-full rounded-full border border-transparent bg-white px-10 py-4 text-lg leading-5 shadow-[0_10px_40px_-30px_rgba(15,23,42,0.6)] placeholder-gray-400 focus:border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-100"
         />
         {loading && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
