@@ -1,4 +1,4 @@
-import { PERMISSIONS } from './constants';
+import { PERMISSIONS, USER_ROLES } from './constants';
 
 /**
  * Check if user has a specific permission
@@ -7,7 +7,9 @@ import { PERMISSIONS } from './constants';
  * @returns {boolean}
  */
 export const hasPermission = (user, permission) => {
-  if (!user || !user.permissions) return false;
+  if (!user) return false;
+  if (user.role === USER_ROLES.ADMIN) return true;
+  if (!user.permissions) return false;
   return user.permissions.includes(PERMISSIONS.ALL) || user.permissions.includes(permission);
 };
 

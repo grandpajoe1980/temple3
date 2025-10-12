@@ -5,6 +5,7 @@ import { useTenant } from '../../contexts/TenantContext';
 import { Menu, Transition } from '@headlessui/react';
 import AuthModal from '../auth/AuthModal';
 import Button from '../shared/Button';
+import usePermissions from '../../hooks/usePermissions';
 import {
   BellIcon,
   UserCircleIcon,
@@ -20,6 +21,9 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { isAdmin, hasPermission } = usePermissions();
+  const canSeeAdminNav = isAdmin() || hasPermission('manage_settings');
+
   const navigationTabs = [
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Calendar', path: '/calendar' },
@@ -28,6 +32,7 @@ const Header = () => {
     { name: 'Messages', path: '/messages' },
     { name: 'Media', path: '/media' },
     { name: 'Donations', path: '/donations' },
+    ...(canSeeAdminNav ? [{ name: 'Admin', path: '/admin' }] : []),
   ];
 
   const handleLogout = () => {

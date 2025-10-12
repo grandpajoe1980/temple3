@@ -87,14 +87,18 @@ export default function Dashboard() {
   ];
 
   // Add admin panel if user has admin permissions
-  if (user?.role === 'admin' || user?.permissions?.includes('admin')) {
+  if (
+    user?.role === 'admin' ||
+    user?.permissions?.includes('manage_settings') ||
+    user?.permissions?.includes('all')
+  ) {
     features.push({
       id: 'admin',
-      name: 'Admin Panel',
-      description: 'Manage temple settings',
+      name: 'Admin Control Panel',
+      description: 'Curate tenant sections, members, and moderation from one hub.',
       icon: CogIcon,
       color: 'gray',
-      permission: 'admin',
+      permission: 'manage_settings',
     });
   }
 
